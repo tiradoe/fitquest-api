@@ -2,6 +2,7 @@ package main
 
 import (
     "net/http"
+    "strconv"
 
     "github.com/gin-gonic/gin"
 )
@@ -9,7 +10,7 @@ import (
 
 func main() {
     db := Database()
-    db.AutoMigrate(&Workout{})
+    db.AutoMigrate(&Workout{}, &Strength{}, &Cardio{})
 
     router := gin.Default()
 
@@ -24,17 +25,18 @@ func main() {
     router.Run()
 }
 
-//func CreateTodo(c *gin.Context) {
-//    completed, _ := strconv.Atoi(c.PostForm("completed"))
-//    todo := Todo{Title: c.PostForm("title"), Completed: completed};
-//https://github.com/jinzhu/gorm    db := Database()
-//    db.Save(&todo)
-//    c.JSON(http.StatusCreated, gin.H{"status" : http.StatusCreated, "message" : "Todo item created successfully!", "resourceId": todo.ID})
-//}
-
 
 func CreateWorkout(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "message": "Create Workout"})
+    db := Database()
+
+    name := c.PostForm("name")
+    set,_ := strconv.Atoi(c.PostForm("set"))
+    exp,_ := strconv.Atoi(c.PostForm("exp"))
+
+    workout := Workout{Name: name, Set: set, Experience: exp}
+    db.Create(&workout)
+
+    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "message": "Workout Created!"})
     return
 }
 
