@@ -3,6 +3,7 @@ package main
 import (
     "net/http"
     "strconv"
+    "log"
 
     "github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func main() {
     v1 := router.Group("/api/v1/workouts")
     {
         v1.GET("/", GetWorkouts)
-        v1.GET("/:id", GetWorkout)
+        v1.GET("/:id/:type", GetWorkout)
         v1.PUT("/:id", UpdateWorkout)
         v1.POST("/create", CreateWorkout)
         v1.DELETE("/:id", DeleteWorkout)
@@ -66,7 +67,31 @@ func CreateWorkout(c *gin.Context) {
 
 
 func GetWorkout(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "message": "Get Workout"})
+    var cardio Cardio
+    var strength Strength
+    workout_type := c.Param("type")
+    id, err := strconv.Atoi(c.Param("id"))
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    db := Database()
+
+    if(workout_type == "cardio"){
+        if db.First(&cardio,id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+        c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":cardio})
+    } else {
+        if db.First(&strength,id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+
+        c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":strength})
+    }
+
     return
 }
 
