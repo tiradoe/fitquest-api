@@ -28,8 +28,6 @@ func main() {
 
 
 func CreateWorkout(c *gin.Context) {
-    db := Database()
-
     name := c.PostForm("name")
     workout_type := c.PostForm("type")
     set,_ := strconv.Atoi(c.PostForm("set"))
@@ -39,7 +37,9 @@ func CreateWorkout(c *gin.Context) {
     weight,_ := strconv.Atoi(c.PostForm("weight"))
     reps,_ := strconv.Atoi(c.PostForm("reps"))
 
-    if (workout_type == "cardio") {
+    db := Database()
+
+    if workout_type == "cardio" {
         var cardio Cardio
 
         cardio = Cardio{
@@ -48,7 +48,8 @@ func CreateWorkout(c *gin.Context) {
             Time: time,
         }
         db.Create(&cardio)
-    } else {
+
+    } else if workout_type == "strength" {
         var strength Strength
 
         strength = Strength {
@@ -56,7 +57,11 @@ func CreateWorkout(c *gin.Context) {
             Weight: weight,
             Reps: reps,
         }
+
         db.Create(&strength)
+    } else {
+        db.Close()
+        c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "message": "No Workout Found"})
     }
 
     db.Close()
@@ -69,27 +74,29 @@ func CreateWorkout(c *gin.Context) {
 func GetWorkout(c *gin.Context) {
     var cardio Cardio
     var strength Strength
+
     workout_type := c.Param("type")
     id, err := strconv.Atoi(c.Param("id"))
     if err != nil {
-        log.Fatal(err)
+        log.Println("Id not provided")
     }
 
     db := Database()
 
-    if(workout_type == "cardio"){
+    if workout_type == "cardio" {
         if db.First(&cardio,id).RecordNotFound() {
             c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
             return
         }
         c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":cardio})
-    } else {
+    } else if workout_type == "strength" {
         if db.First(&strength,id).RecordNotFound() {
             c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
             return
         }
-
         c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":strength})
+    } else {
+        c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "message": "No Workout Found"})
     }
 
     return
