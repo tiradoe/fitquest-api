@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    web:
+      container_name: fitquest
+      build: .
+      env_file: .env
+      restart: always
+      depends_on:
+          - mariadb
+      links:
+          - mariadb
+
+    mariadb:
+      container_name: fitquestdb
+      image: bitnami/mariadb
+      env_file: .env
+      ports:
+          - 3306:3306
+      volumes:
+          - /data:/var/lib/mysql

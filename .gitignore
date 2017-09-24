@@ -1,2 +1,4 @@
 fitquest-api
 *.swp
+.env
+.gitignore
