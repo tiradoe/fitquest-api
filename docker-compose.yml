@@ -15,7 +15,10 @@ services:
       container_name: fitquestdb
       image: bitnami/mariadb
       env_file: .env
+      restart: always
       ports:
           - 3306:3306
       volumes:
-          - /data:/var/lib/mysql
+          - fitquest_data:/var/lib/mysql
+volumes:
+    fitquest_data:
