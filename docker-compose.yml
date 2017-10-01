@@ -19,6 +19,6 @@ services:
       ports:
           - 3306:3306
       volumes:
-          - fitquest_data:/var/lib/mysql
+          - fitquest_data:/bitnami
 volumes:
     fitquest_data:
