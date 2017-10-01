@@ -19,9 +19,9 @@ func main() {
     {
         v1.GET("/", GetWorkouts)
         v1.GET("/:id/:type", GetWorkout)
-        v1.PUT("/:id", UpdateWorkout)
+        v1.PUT("/:id/:type", UpdateWorkout)
         v1.POST("/create", CreateWorkout)
-        v1.DELETE("/:id", DeleteWorkout)
+        v1.DELETE("/:id/:type", DeleteWorkout)
     }
     router.Run()
 }
@@ -117,12 +117,85 @@ func GetWorkouts(c *gin.Context) {
 
 
 func UpdateWorkout(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "message": "Update Workout"})
+    var cardio Cardio
+    var strength Strength
+
+    id := c.Param("id")
+    workout_type := c.Param("type")
+    name := c.PostForm("name")
+    set,_ := strconv.Atoi(c.PostForm("set"))
+    exp,_ := strconv.Atoi(c.PostForm("exp"))
+
+    db := Database()
+
+    if workout_type == "cardio" {
+        distance,_ := strconv.Atoi(c.PostForm("distance"))
+        time,_ := strconv.Atoi(c.PostForm("time"))
+
+        if db.First(&cardio,id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+
+        cardio.Name = name
+        cardio.Set = set
+        cardio.Experience = exp
+        cardio.Distance = distance
+        cardio.Time = time
+
+        db.Save(&cardio)
+
+        c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":cardio, "message": "Workout saved!"})
+    } else if workout_type == "strength" {
+        weight,_ := strconv.Atoi(c.PostForm("weight"))
+        reps,_ := strconv.Atoi(c.PostForm("reps"))
+
+        if db.First(&strength,id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+
+        strength.Name = name
+        strength.Set = set
+        strength.Weight = weight
+        strength.Reps = reps
+
+        db.Save(&strength)
+
+        c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":strength, "message": "Workout Saved!"})
+    } else {
+        c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "message": "No Workout Found"})
+    }
+
     return
 }
 
 
 func DeleteWorkout(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "message": "Delete Workout"})
+    var cardio Cardio
+    var strength Strength
+
+    id := c.Param("id")
+    workout_type := c.Param("type")
+
+    db := Database()
+
+    if workout_type == "cardio" {
+        if db.First(&cardio, id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+        db.Delete(&cardio)
+    } else if workout_type == "strength" {
+        if db.First(&strength, id).RecordNotFound() {
+            c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "workout":"No Workout Found"})
+            return
+        }
+        db.Delete(&strength)
+    } else {
+        c.JSON(http.StatusNotFound, gin.H{"status":http.StatusNotFound, "message": "No Workout Found"})
+    }
+
+    c.JSON(http.StatusOK, gin.H{"status":http.StatusOK, "workout":"Workout Deleted!"})
     return
 }
