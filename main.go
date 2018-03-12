@@ -132,7 +132,7 @@ func UpdateWorkout(c *gin.Context) {
         }
 
         cardio.Name = name
-        cardio.Sets= sets
+        cardio.Sets = sets
         cardio.Experience = exp
         cardio.Distance = distance
         cardio.Time = time
