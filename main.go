@@ -14,9 +14,9 @@ func main() {
 	{
 		v1.GET("/", GetWorkouts)
 		v1.GET("/:id", GetWorkout)
-		v1.PUT("/:id/:type", UpdateWorkout)
+		v1.PUT("/:id/", UpdateWorkout)
 		v1.POST("/create", CreateWorkout)
-		v1.DELETE("/:id/:type", DeleteWorkout)
+		v1.DELETE("/:id/", DeleteWorkout)
 	}
 	router.Run()
 }
