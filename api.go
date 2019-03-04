@@ -33,7 +33,11 @@ func CreateWorkout(c *gin.Context) {
 			Experience: exp,
 		}
 		db.Create(&cardio)
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Workout Created!", "workout": cardio})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  http.StatusOK,
+			"message": "Workout Created!",
+			"workout": cardio,
+		})
 
 	} else if workout_type == "strength" {
 		var strength Workout
@@ -48,10 +52,17 @@ func CreateWorkout(c *gin.Context) {
 		}
 
 		db.Create(&strength)
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Workout Created!", "workout": strength})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  http.StatusOK,
+			"message": "Workout Created!",
+			"workout": strength,
+		})
 	} else {
 		db.Close()
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No Workout Found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "No Workout Found",
+		})
 	}
 
 	db.Close()
@@ -70,10 +81,16 @@ func GetWorkout(c *gin.Context) {
 	db := Database()
 
 	if db.Preload("Sets").First(&workout, id).RecordNotFound() {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "workout": "No Workout Found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"workout": "No Workout Found",
+		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "workout": workout})
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"workout": workout,
+	})
 
 	return
 }
@@ -84,7 +101,11 @@ func GetWorkouts(c *gin.Context) {
 	db := Database()
 	db.Preload("Sets").Find(&workouts)
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "workouts": workouts})
+	c.JSON(http.StatusOK, gin.H{
+		"status":   http.StatusOK,
+		"workouts": workouts,
+	})
+
 	return
 }
 
@@ -105,7 +126,11 @@ func UpdateWorkout(c *gin.Context) {
 		time, _ := strconv.Atoi(c.PostForm("time"))
 
 		if db.First(&cardio, id).RecordNotFound() {
-			c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "workout": "No Workout Found"})
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  http.StatusNotFound,
+				"workout": "No Workout Found",
+			})
+
 			return
 		}
 
@@ -117,12 +142,20 @@ func UpdateWorkout(c *gin.Context) {
 
 		db.Save(&cardio)
 
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "workout": cardio, "message": "Workout saved!"})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  http.StatusOK,
+			"workout": cardio,
+			"message": "Workout saved!",
+		})
 	} else if workout_type == "strength" {
 		weight, _ := strconv.Atoi(c.PostForm("weight"))
 
 		if db.First(&strength, id).RecordNotFound() {
-			c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "workout": "No Workout Found"})
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  http.StatusNotFound,
+				"workout": "No Workout Found",
+			})
+
 			return
 		}
 
@@ -132,9 +165,16 @@ func UpdateWorkout(c *gin.Context) {
 
 		db.Save(&strength)
 
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "workout": strength, "message": "Workout Saved!"})
+		c.JSON(http.StatusOK, gin.H{
+			"status":  http.StatusOK,
+			"workout": strength,
+			"message": "Workout Saved!",
+		})
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "No Workout Found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "No Workout Found",
+		})
 	}
 
 	return
@@ -148,17 +188,26 @@ func DeleteWorkout(c *gin.Context) {
 	db := Database()
 
 	if db.First(&workout, id).RecordNotFound() {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "workout": "No Workout Found"})
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"workout": "No Workout Found",
+		})
+
 		return
 	}
 	db.Delete(&workout)
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "workout": "Workout Deleted!"})
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"workout": "Workout Deleted!",
+	})
+
 	return
 }
 
 func GenerateSets() []Set {
-	/* Just for testing.  DELETE THIS */
+	/* Just for testing.*/
+	//@todo delete this when UI is ready
 	var set_test []Set
 	set_test = append(set_test, Set{Reps: 5, IncreaseWeight: true})
 	set_test = append(set_test, Set{Reps: 3, IncreaseWeight: false})
