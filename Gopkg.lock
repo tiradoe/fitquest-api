@@ -57,6 +57,12 @@
   version = "v0.0.3"
 
 [[projects]]
+  name = "github.com/selvatico/go-mocket"
+  packages = ["."]
+  revision = "c368d4162be502eea110ae12fb85e98567b0f1e6"
+  version = "v1.0.7"
+
+[[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
   revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
@@ -92,6 +98,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "96912d1169da57210edaf86c55e3ad48fb35516383155ea306de4b10c1a3dfa3"
+  inputs-digest = "23844f599c4606b47a66b394a2e0490f3209307b5a683237689d64f977e54eb4"
   solver-name = "gps-cdcl"
   solver-version = 1

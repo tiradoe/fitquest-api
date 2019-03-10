@@ -1,6 +1,7 @@
 package main
 
 import "testing"
+import "github.com/selvatico/go-mocket"
 
 func TestCreateWorkout(t *testing.T) {
 	t.Log("TestCreateWorkout")

@@ -40,3 +40,11 @@
 [[constraint]]
   name = "github.com/Sirupsen/logrus"
   version = "1.0.5"
+
+[[constraint]]
+  name = "github.com/Selvatico/go-mocket"
+  version = "1.0.7"
+
+[[constraint]]
+  name = "github.com/selvatico/go-mocket"
+  version = "1.0.7"
