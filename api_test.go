@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/selvatico/go-mocket"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -30,7 +31,6 @@ func TestCreateCardioWorkout(t *testing.T) {
 	}
 
 	t.Log("Cardio Workout Created!")
-
 }
 
 func TestGetWorkout(t *testing.T) {
