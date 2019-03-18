@@ -20,13 +20,15 @@ func CreateWorkout(c *gin.Context) {
 	weight, _ := strconv.Atoi(c.PostForm("weight"))
 	increase_by, _ := strconv.Atoi(c.PostForm("increase_by"))
 
-	db := Database()
+	db := getDB()
+	defer db.Close()
 
 	if workout_type == "cardio" {
 		var cardio Workout
 
 		cardio = Workout{
 			Name:       name,
+			Type:       workout_type,
 			Sets:       sets,
 			Distance:   distance,
 			Time:       time,
@@ -58,14 +60,11 @@ func CreateWorkout(c *gin.Context) {
 			"workout": strength,
 		})
 	} else {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  http.StatusNotFound,
 			"message": "No Workout Found",
 		})
 	}
-
-	db.Close()
 
 	return
 }
@@ -78,7 +77,8 @@ func GetWorkout(c *gin.Context) {
 		logrus.WithError(err).Error("ID not provided")
 	}
 
-	db := Database()
+	db := getDB()
+	defer db.Close()
 
 	if db.Preload("Sets").First(&workout, id).RecordNotFound() {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -98,7 +98,9 @@ func GetWorkout(c *gin.Context) {
 func GetWorkouts(c *gin.Context) {
 	var workouts []Workout
 
-	db := Database()
+	db := getDB()
+	defer db.Close()
+
 	db.Preload("Sets").Find(&workouts)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -119,7 +121,8 @@ func UpdateWorkout(c *gin.Context) {
 	sets := GenerateSets()
 	exp, _ := strconv.Atoi(c.PostForm("exp"))
 
-	db := Database()
+	db := getDB()
+	defer db.Close()
 
 	if workout_type == "cardio" {
 		distance, _ := strconv.Atoi(c.PostForm("distance"))
@@ -185,7 +188,8 @@ func DeleteWorkout(c *gin.Context) {
 
 	id := c.Param("id")
 
-	db := Database()
+	db := getDB()
+	defer db.Close()
 
 	if db.First(&workout, id).RecordNotFound() {
 		c.JSON(http.StatusNotFound, gin.H{
