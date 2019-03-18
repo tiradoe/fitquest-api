@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SetupRouter returns a routergroup
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 

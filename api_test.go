@@ -58,17 +58,18 @@ func TestApiRoutes(t *testing.T) {
 			t.Fatalf("Expected cardio but got %s", response.Workout.Type)
 		}
 		if response.Workout.Experience != 5 {
-			t.Fatalf("Expected 5 but got %s", response.Workout.Experience)
+			t.Fatalf("Expected 5 but got %d", response.Workout.Experience)
 		}
 		if response.Workout.Distance != 6 {
-			t.Fatalf("Expected 6 but got %s", response.Workout.Distance)
+			t.Fatalf("Expected 6 but got %d", response.Workout.Distance)
 		}
 		if response.Workout.Time != 6000 {
-			t.Fatalf("Expected 6000 but got %s", response.Workout.Time)
+			t.Fatalf("Expected 6000 but got %d", response.Workout.Time)
 		}
 	})
 
 	t.Run("Getting all workouts from database", func(t *testing.T) {
+		mocket.Catcher.Logging = true
 		w := httptest.NewRecorder()
 
 		commonReply := []map[string]interface{}{{
@@ -103,11 +104,6 @@ func TestApiRoutes(t *testing.T) {
 }
 
 func TestGetWorkout(t *testing.T) {
-	t.Log("TestGetWorkouts")
-
-}
-
-func TestGetWorkouts(t *testing.T) {
 	t.Log("TestGetWorkouts")
 
 }

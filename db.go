@@ -28,17 +28,19 @@ func getDB() *gorm.DB {
 	return db
 }
 
+// Database returns a database connection to the mySQL database
 func Database() *gorm.DB {
-	var login string = os.Getenv("FITQUESTDB")
-	var db_conn string = fmt.Sprintf("%s@tcp(fitquestdb:3306)/fitquest?charset=utf8&parseTime=True&loc=Local", login)
+	login := os.Getenv("FITQUESTDB")
+	dbConn := fmt.Sprintf("%s@tcp(fitquestdb:3306)/fitquest?charset=utf8&parseTime=True&loc=Local", login)
 
-	db, err := gorm.Open("mysql", db_conn)
+	db, err := gorm.Open("mysql", dbConn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return db
 }
 
+// TestDatabase returns a mock connection do a dummy database
 func TestDatabase() *gorm.DB {
 	mocket.Catcher.Register()
 	mocket.Catcher.Logging = true

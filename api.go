@@ -8,27 +8,28 @@ import (
 	"strconv"
 )
 
+// CreateWorkout adds a workout to the database
 func CreateWorkout(c *gin.Context) {
 	var sets []Set
 
 	name := c.PostForm("name")
-	workout_type := c.PostForm("type")
+	workoutType := c.PostForm("type")
 	sets = GenerateSets()
 	exp, _ := strconv.Atoi(c.PostForm("exp"))
 	distance, _ := strconv.Atoi(c.PostForm("distance"))
 	time, _ := strconv.Atoi(c.PostForm("time"))
 	weight, _ := strconv.Atoi(c.PostForm("weight"))
-	increase_by, _ := strconv.Atoi(c.PostForm("increase_by"))
+	increaseBy, _ := strconv.Atoi(c.PostForm("increaseBy"))
 
 	db := getDB()
 	defer db.Close()
 
-	if workout_type == "cardio" {
+	if workoutType == "cardio" {
 		var cardio Workout
 
 		cardio = Workout{
 			Name:       name,
-			Type:       workout_type,
+			Type:       workoutType,
 			Sets:       sets,
 			Distance:   distance,
 			Time:       time,
@@ -41,15 +42,15 @@ func CreateWorkout(c *gin.Context) {
 			"workout": cardio,
 		})
 
-	} else if workout_type == "strength" {
+	} else if workoutType == "strength" {
 		var strength Workout
 
 		strength = Workout{
 			Name:       name,
-			Type:       workout_type,
+			Type:       workoutType,
 			Sets:       sets,
 			Weight:     weight,
-			IncreaseBy: increase_by,
+			IncreaseBy: increaseBy,
 			Experience: exp,
 		}
 
@@ -69,6 +70,7 @@ func CreateWorkout(c *gin.Context) {
 	return
 }
 
+// GetWorkout gets a single workout using the id
 func GetWorkout(c *gin.Context) {
 	var workout Workout
 
@@ -95,6 +97,7 @@ func GetWorkout(c *gin.Context) {
 	return
 }
 
+// GetWorkouts gets all of the user's workouts
 func GetWorkouts(c *gin.Context) {
 	var workouts []Workout
 
@@ -111,12 +114,13 @@ func GetWorkouts(c *gin.Context) {
 	return
 }
 
+// UpdateWorkout makes user provided changes to the specified workout
 func UpdateWorkout(c *gin.Context) {
 	var cardio Workout
 	var strength Workout
 
 	id := c.Param("id")
-	workout_type := c.Param("type")
+	workoutType := c.Param("type")
 	name := c.PostForm("name")
 	sets := GenerateSets()
 	exp, _ := strconv.Atoi(c.PostForm("exp"))
@@ -124,7 +128,7 @@ func UpdateWorkout(c *gin.Context) {
 	db := getDB()
 	defer db.Close()
 
-	if workout_type == "cardio" {
+	if workoutType == "cardio" {
 		distance, _ := strconv.Atoi(c.PostForm("distance"))
 		time, _ := strconv.Atoi(c.PostForm("time"))
 
@@ -150,7 +154,7 @@ func UpdateWorkout(c *gin.Context) {
 			"workout": cardio,
 			"message": "Workout saved!",
 		})
-	} else if workout_type == "strength" {
+	} else if workoutType == "strength" {
 		weight, _ := strconv.Atoi(c.PostForm("weight"))
 
 		if db.First(&strength, id).RecordNotFound() {
@@ -183,6 +187,7 @@ func UpdateWorkout(c *gin.Context) {
 	return
 }
 
+// DeleteWorkout removes the specified workout from the database
 func DeleteWorkout(c *gin.Context) {
 	var workout Workout
 
@@ -209,12 +214,11 @@ func DeleteWorkout(c *gin.Context) {
 	return
 }
 
+// GenerateSets creates dummy sets for testing.  Should be deleted when UI is ready
 func GenerateSets() []Set {
-	/* Just for testing.*/
-	//@todo delete this when UI is ready
-	var set_test []Set
-	set_test = append(set_test, Set{Reps: 5, IncreaseWeight: true})
-	set_test = append(set_test, Set{Reps: 3, IncreaseWeight: false})
+	var setTest []Set
+	setTest = append(setTest, Set{Reps: 5, IncreaseWeight: true})
+	setTest = append(setTest, Set{Reps: 3, IncreaseWeight: false})
 
-	return set_test
+	return setTest
 }
