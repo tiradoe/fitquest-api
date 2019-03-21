@@ -72,7 +72,7 @@ func TestApiRoutes(t *testing.T) {
 		mocket.Catcher.Logging = true
 		w := httptest.NewRecorder()
 
-		commonReply := []map[string]interface{}{{
+		dbReply := []map[string]interface{}{{
 			"name":       "Test_workout",
 			"type":       "cardio",
 			"sets":       GenerateSets(),
@@ -81,7 +81,7 @@ func TestApiRoutes(t *testing.T) {
 			"experience": 10,
 		}}
 
-		mocket.Catcher.Reset().NewMock().WithQuery(`INSERT INTO "workouts" ("created_at","updated_at","deleted_at","routine_id","name","type","distance","time","weight","increase_by","experience"`).WithReply(commonReply)
+		mocket.Catcher.Reset().NewMock().WithQuery(`INSERT INTO "workouts" ("created_at","updated_at","deleted_at","routine_id","name","type","distance","time","weight","increase_by","experience"`).WithReply(dbReply)
 
 		req, err := http.NewRequest(
 			"GET",
