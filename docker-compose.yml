@@ -22,5 +22,11 @@ services:
           - 3306:3306
       volumes:
           - fitquest_data:/bitnami
+
 volumes:
     fitquest_data:
+
+networks:
+  default:
+    external:
+      name: localdev
