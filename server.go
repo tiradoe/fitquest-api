@@ -13,7 +13,7 @@ func SetupRouter() *gin.Engine {
 		v1.GET("/", GetWorkouts)
 		v1.GET("/:id", GetWorkout)
 		v1.PUT("/:id/", UpdateWorkout)
-		v1.POST("/create", CreateWorkout)
+		v1.POST("/", CreateWorkout)
 		v1.DELETE("/:id/", DeleteWorkout)
 	}
 
